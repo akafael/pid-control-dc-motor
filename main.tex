@@ -1,0 +1,37 @@
+% Pacotes e configurações padrão do estilo ``article''\
+% -------------------------------------
+\documentclass[a4paper,11pt]{article}
+% Layout
+% --------------------------------------------------------------------------------
+\input{relat_layout.tex}
+
+\title{Laboratório X} % Define o título do Relatório
+\author{Rafael Lima}
+
+% Definições Auxiliares ( Macros próprias )
+% -----------------------------------------------------------------
+%\input{relat_aux.tex} % Arquivo com minhas macros
+% ----------------------------------~>ø<~---------------------------------------
+\begin{document}
+% Capa e Índice ---------------------------------------------------------------
+\input{relat_capa.tex} % Capa para UnB
+% Conteúdo -------------------------------------------------------------------
+
+\section{Introdução}
+\section{Procedimentos}
+\section{Resultados}
+\section{Análise dos Resultados}
+\section{Conclusão}
+\section{Conclusão}
+
+% ---------------------------------------------------------------------------------------
+
+\bibliographystyle{abbrv}
+\bibliography{references}
+% Referências
+% Acrescentadas no arquivo references.bib
+% para usa-las no texto batsa usar \citep{}
+
+
+% ---------------------------------------------------------------------------------------
+\end{document}

@@ -1,0 +1,103 @@
+%     Gráficos e layout ----------------------------------------------------------------------
+
+\ifx\pdfmatch\undefined
+\else
+    \usepackage[T1]{fontenc}
+    \usepackage[utf8]{inputenc}
+\fi
+% xetex:
+\ifx\XeTeXinterchartoks\undefined
+\else
+    \usepackage{fontspec}
+    \defaultfontfeatures{Ligatures=TeX}
+\fi
+% luatex:
+\ifx\directlua\undefined
+\else
+    \usepackage{fontspec}
+\fi
+% End engine-specific settings
+
+%      Fonte --------------------------------------------------------------------------------
+%\usepackage{lmodern}
+\usepackage{times}
+%     Pacotes adicionados -------------------------------------------------------------------
+\usepackage{ae}
+%     Língua e hifenização ------------------------------------------------------------------
+\usepackage[portuguese]{babel}
+\usepackage{hyphenat}
+%      Outros --------------------------------------------------------------------------------
+\usepackage{hyperref} % Permite Links personalisados usando hyperref
+\usepackage{fancyhdr}
+\usepackage{sectsty}
+\usepackage{float}   % Gerencia melhor o posicionamento das figuras e tabelas
+%\usepackage{graphicx}
+\usepackage[pdftex]{color,graphicx}
+\usepackage{hyperref}
+\usepackage{enumerate} % Permite alterar Layout do enumerate
+%\usepackage{pdflscape}  % Permite alterar a orientação da pagina para Paisagem
+%\usepackage{ifthen}  % Permite usar condicionais ifelse
+%\usepackage[table]{xcolor} % Permite alterar as cores das células de uma tabela
+\usepackage{amsmath,amssymb} % Ambiente para uso de elementos matemáticos
+\usepackage{caption}
+\usepackage{subcaption} % permite o uso de multiplas figuras com legenda (ambiente subfigure)
+%\usepackage{minted} % Ambiente minted para colorir código de programas
+\usepackage{natbib} % Para referencia bibliográfica
+\usepackage{url}    % Referência de links na internet
+%\usepackage{listings} % pacote para apresentar código de programação
+\usepackage{indentfirst}  % Para indentar o primeiro parágrafo de cada seção
+\usepackage{titling}  % Permite Montar uma página de titulo própria
+
+% Layout do documento ------------------------------------------------------------------------
+%     Bordas e tamanho da página ------------------------------------------------------------
+\usepackage{geometry} 
+ \geometry{ % Padrõa ABNT para relatórios
+ a4paper,
+ left=30mm,
+ right=20mm,
+ top=30mm,
+ bottom=20mm
+ }
+%     Cabeçalho e Rodapé ---------------------------------------------------------------
+\pagestyle{fancy}
+  \lhead{}
+  \chead{}
+  \rhead{}
+  \lfoot{}
+  \cfoot{}
+  \rfoot{\thepage}
+%     Númeração ------------------------------------------------------------------------
+  \pagenumbering{arabic}
+%     Retas do cabeçalho e rodapé ------------------------------------------------------
+  \renewcommand{\headrulewidth}{0.5pt}
+  \renewcommand{\footrulewidth}{0.5pt}
+%     Tamanho da letra de seções e derivadas --------------------------------------------
+  \sectionfont{\normalsize}
+  \subsectionfont{\small}
+%     Hiperlinks ------------------------------------------------------------------------
+  \hypersetup{
+                  colorlinks,
+                  citecolor=black,
+                  filecolor=black,
+                  linkcolor=black,
+                  urlcolor=black
+                  }
+%     Definições do pdf ----------------------------------------------------------------------
+\hypersetup{
+    unicode=false,          % non-Latin characters in Acrobat’s bookmarks
+    pdftoolbar=true,        % show Acrobat’s toolbar?
+    pdfmenubar=true,        % show Acrobat’s menu?
+    pdffitwindow=false,     % window fit to page when opened
+    pdfstartview={FitH},    % fits the width of the page to the window    
+    pdfauthor={Rafael Lima},     % author
+    pdfnewwindow=true      % links in new window
+}
+%     Outros ----------------------------------------------------------------------------
+      %\renewcommand{\thesection}{(\alph{section})} % muda o estilo de númeração das sections
+      % alterando a formatação dos numeradores de lista de itens
+      \renewcommand\theenumi{\arabic{enumi}}
+      \renewcommand\labelenumi{(\textit{\theenumi})}
+	  \renewcommand\theenumii{\arabic{enumii}}
+	  \renewcommand\labelenumii{(\textit{\theenumi.\theenumii})}
+      
+% ---------------------------------------------------------------------------------------
