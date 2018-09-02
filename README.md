@@ -1,6 +1,6 @@
 # PID Control 
 
-PID Control deverloped as final project for Dynamic Control Laboratory Class with Doctor Geovany A. Borges.
+PID Control deverloped as final project for Dynamic Control Laboratory Class with [Prof. Geovany A. Borges](http://www.ene.unb.br/gaborges/publicacoes/index.htm).
 
 ## Folders Description
 
@@ -9,5 +9,5 @@ PID Control deverloped as final project for Dynamic Control Laboratory Class wit
 
 ## Reference
 
- * [https://en.wikibooks.org/wiki/Control_Systems](Wikibook Control System)
+ * [Wikibook Control System](https://en.wikibooks.org/wiki/Control_Systems)
  * [Control of Mobile Robots Course](https://www.youtube.com/watch?v=aSwCMK96NOw&list=PLp8ijpvp8iCvFDYdcXqqYU5Ibl_aOqwjr)
