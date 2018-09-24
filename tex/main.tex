@@ -38,6 +38,21 @@
 
 \subsection{Identificação de Parâmetros}
 
+% http://www.eletrica.ufpr.br/~gustavo/controle_digital/Intro_Ident_Intro_v23abr12.pdf
+% convert from ft to ss https://www.mathworks.com/help/signal/ref/tf2ss.html
+% convert from ss to ft https://www.mathworks.com/help/matlab/ref/ss2tf.html
+
+% Modelo Figura
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{tex/img/dcMotorSimulation.pdf}
+    \caption{Planta Simulação}
+    \label{fig:my_label}
+\end{figure}
+
+% Modelo Código
+\inputminted{matlab}{../src/matlab/dcMotor.m}
+
 \subsubsection{Zona Morta}
 \subsubsection{Modelo Linear 1 ordem}
 \subsubsection{Modelo Linear 2 ordem}
