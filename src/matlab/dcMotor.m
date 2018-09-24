@@ -2,8 +2,8 @@
 clear
 %% Simulink
 k1 = 1
-k2 = 55
-k3 = 23
+k2 = 2
+k3 = 3
 modelFileName = 'dcMotorSimulation';
 % Run Simulation
 sim(modelFileName);
@@ -40,6 +40,6 @@ dW = w(2:end) - w(1:(end-1));     % dW = Wi - Wi-1
 ddW = dW(2:end) - dW(1:(end-1));  % ddW = dWi - dWi-1
 dT2 = t(3:end) - t(2:(end-1));     % dT = Ti - Ti-1
 
-B = [u(3:end) (-w(3:end)) (-dW(2:end))];    % ignore first point
+B = [u(3:end) (-w(3:end)) (-dW(2:end)./dT2)];    % ignore first point
 paramSecond = (B'*B)\(B'*(ddW./dT2))   % pseudo inverse
 tfSecond = tf(paramSecond(1),[1 paramSecond(2) paramSecond(3)])
