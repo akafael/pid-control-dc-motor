@@ -42,6 +42,8 @@
 % convert from ft to ss https://www.mathworks.com/help/signal/ref/tf2ss.html
 % convert from ss to ft https://www.mathworks.com/help/matlab/ref/ss2tf.html
 
+Para validar o sistema foi definido um planta para simular o comportamento de um sistema de primeira ordem e um sistema de segunda ordem para uma mesma entrada. O sinal de entrada e a resposta de saída do sistema é então armazenado em arquivo \textit{.mat} para leitura posterior.
+
 % Modelo Figura
 \begin{figure}[H]
     \centering
@@ -50,11 +52,85 @@
     \label{fig:my_label}
 \end{figure}
 
+\subsubsection{Região não Linear - Zona Morta}
+
+% Maior valor da entrada pelo qual a saída é zero.
+
+\subsubsection{Estimação modelo de de primeira ordem}
+
+Supondo um modelo de primeira ordem com coeficientes $a$ e $b$ definido por:
+
+\begin{equation}
+    H_1(s) = \frac{Y(s)}{X(s)} = \frac{b}{s+a}
+\end{equation}
+
+% Equação de Transferência
+
+Podemos reescrever a função de transferência como
+\begin{equation}
+Ys + Y k_1 = X k_2
+\end{equation}
+
+% EDO
+A partir do qual temos o sistema descrito a partir da seguinte equação diferêncial:
+
+\begin{equation}
+\dot{y}(t) + k_1 y(t) = k_2 x(t)
+\end{equation}
+
+Tomando os valores de entrada e saída do sistema em diferentes instantes para um sinal de entrada temos:
+
+% Sistema Linear
+\begin{equation}
+\left\{\begin{array}{c}
+    \dot{y}(t_0) + k_1 y(t_0) = k_2 x(t_0)  \\
+    \dots\\
+    \dot{y}(t_i) + k_1 y(t_i) = k_2 x(t_i)  \\
+\end{array} \right.
+\end{equation}
+
+% Representação como Matriz
+
+Podemos representar a equação na forma matricial:
+
+\begin{equation}
+\left[\begin{array}{cc}
+    \dot{y}(t_0) & y(t_0)\\
+    \dots  & \dots \\
+    \dot{y}(t_i) & y(t_i)\\
+\end{array} \right]
+\left[\begin{array}{c}
+    k_1\\
+    k_2\\
+\end{array} \right]
+=
+\left[\begin{array}{c}
+    x(t_0)  \\
+    \dots\\
+    x(t_i)  \\
+\end{array} \right]
+\end{equation}
+
+% Resolução por Matrizes
+
+Denominando $A$ a matriz envolvendo $\dot{y}(t)$ e $y(t)$, $Bt)$ a matriz dos valores de entrada $x(t)$
+
+\begin{equation}
+    A(t) P = B(t)
+\end{equation}
+
+\begin{equation}
+    A^T(t)A(t) P = A^T(t) B(t)
+\end{equation}
+
+Isolando a matriz $P$ podemos achar o parâmetros a partir da seguinte expressão:
+
+\begin{equation}
+    P = \left(A^T(t) A(t)\right)^{-1} A^T(t) B(t)
+\end{equation}
+
 % Modelo Código
 \inputminted{matlab}{../src/matlab/dcMotor.m}
-
-\subsubsection{Zona Morta}
-\subsubsection{Modelo Linear 1 ordem}
 
 % Modelo Figura
 \begin{figure}[H]
