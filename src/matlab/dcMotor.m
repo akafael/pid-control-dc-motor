@@ -29,39 +29,37 @@ deltaMinus = min(v(isZero))
 deltaPlus = max(v(isZero))
 
 %% First Order Model Parameters Identification
-dW = w(2:end) - w(1:(end-1));  % dW = Wi - Wi-1
-dT = t(2:end) - t(1:(end-1));  % dT = Ti - Ti-1
-
-A = [u(2:end) (-w(2:end))];             % ignore first point
-paramFist = (A'*A)\(A'*(dW./dT))        % pseudo inverse
-errorParamFirst = paramFist - [k1;k2]   % evaluate error parameters
-
-tfFirst = tf(paramFist(1),[1 paramFist(2)])
+tfFirst = firstordertf(u,w,t)
 m1 = lsim(tfFirst,u,t);
 errorFirst = norm(m1 - w)/norm(w)
 
 %% Second Order Model Parameters Identification
-dW = diff(w,1)./t(2:end);                     % dW = Wi - Wi-1
-ddW = diff(dW,1)./t(3:end);                   % ddW = dWi - dWi-1
-dT2 = t(3:end) - t(2:(end-1));      % dT = Ti - Ti-1
-
-B = [ddW(1:end) dW(1:end-1) w(1:end-2)];  % ignore first point
-paramSecond = (B'*B)\(B'*(u(3:end)))   % pseudo inverse
-
-tfSecond = tf(9,[paramSecond(3) paramSecond(2) paramSecond(1)])
+tfSecond = secondordertf(u,w,t)
 m2 = lsim(tfSecond,u,t);
 errorSecond = norm(m2 - w)/norm(w)
 
 %% Plot
 mFigure = figure('PaperPositionMode', 'auto');
-subplot(2,1,1)
 plot(t,w,t,m1,t,m2)
 mLegend = legend({'u(t)','$m_1(t)$','$m_2(t)$'},'Interpreter','latex');
-
-subplot(2,1,2)
-plot(t,m2)
-mLegend = legend({'u(t)','$m_1(t)$','$m_2(t)$'},'Interpreter','latex');
-
 % Export Plot as PDF
-pictureFileName = ['../../tex/img/','modelEvaluation','.pdf']; % Generate name from model name
-print(mFigure,'-depsc',pictureFileName);      % Generate PDF
+pictureFileName = ['../../tex/img/','model1Evaluation','.pdf']; % Generate name from model name
+print(mFigure,'-dpdf',pictureFileName);      % Generate PDF
+
+%% First Order Model Parameters Identification
+tfFirst = firstordertf(u,w2,t)
+m1 = lsim(tfFirst,u,t);
+errorFirst = norm(m1 - w2)/norm(w2)
+
+%% Second Order Model Parameters Identification
+tfSecond = secondordertf(u,w,t)
+m2 = lsim(tfSecond,u,t);
+errorSecond = norm(m2 - w2)/norm(w2)
+
+%% Plot
+mFigure = figure('PaperPositionMode', 'auto');
+plot(t,w2,t,m1,t,m2)
+mLegend = legend({'u(t)','$m_1(t)$','$m_2(t)$'},'Interpreter','latex');
+% Export Plot as PDF
+pictureFileName = ['../../tex/img/','model2Evaluation','.pdf']; % Generate name from model name
+print(mFigure,'-dpdf',pictureFileName);      % Generate PDF
