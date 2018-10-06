@@ -1,5 +1,5 @@
 %% DC Motor Model Evaluation
-close
+close all
 clear
 %% Simulink
 k1 = 1
@@ -40,8 +40,8 @@ errorSecond = norm(m2 - w)/norm(w)
 
 %% Plot
 mFigure = figure('PaperPositionMode', 'auto');
-plot(t,w,t,m1,t,m2)
-mLegend = legend({'u(t)','$m_1(t)$','$m_2(t)$'},'Interpreter','latex');
+plot(t,v,t,w,t,m1,t,m2)
+mLegend = legend({'$v(t)$','$w_1(t)$','$m_1(t)$','$m_2(t)$'},'Interpreter','latex');
 % Export Plot as PDF
 pictureFileName = ['../../tex/img/','model1Evaluation','.pdf']; % Generate name from model name
 print(mFigure,'-dpdf',pictureFileName);      % Generate PDF
@@ -58,8 +58,8 @@ errorSecond = norm(m2 - w2)/norm(w2)
 
 %% Plot
 mFigure = figure('PaperPositionMode', 'auto');
-plot(t,w2,t,m1,t,m2)
-mLegend = legend({'u(t)','$m_1(t)$','$m_2(t)$'},'Interpreter','latex');
+plot(t,v,t,w2,t,m1,t,m2)
+mLegend = legend({'$v(t)$','$w_2(t)$','$m_1(t)$','$m_2(t)$'},'Interpreter','latex');
 % Export Plot as PDF
 pictureFileName = ['../../tex/img/','model2Evaluation','.pdf']; % Generate name from model name
 print(mFigure,'-dpdf',pictureFileName);      % Generate PDF
