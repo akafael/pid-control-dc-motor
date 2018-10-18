@@ -250,6 +250,22 @@ Em uma planta real pode ser utilizado algum sensor para medir a velocidade e a a
 
 % ---------------------------------------------------------------------------------------
 
+\section{Controle PID}
+\subsection{Planta de Simulação}
+
+A partir dos dados da identificação, a resposta da planta com o controle PID implementado é simuladas utilizando o Simulink, ilustrada na figura \ref{fig:pidControlPlant}. Na simulação é comparado a resposta ao PID a partir das função de transferência de primeira e de segunda ordem geradas pela etapa de identificação.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{tex/img/dcMotorControl.pdf}
+    \caption{Planta Simulação Controle PID}
+    \label{fig:pidControlPlant}
+\end{figure}
+
+\section{Conclusão}
+
+% ---------------------------------------------------------------------------------------
+
 \bibliographystyle{abbrv}
 \bibliography{references}
 % Referências
@@ -258,4 +274,6 @@ Em uma planta real pode ser utilizado algum sensor para medir a velocidade e a a
 
 
 % ---------------------------------------------------------------------------------------
+
+
 \end{document}
