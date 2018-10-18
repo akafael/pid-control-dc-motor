@@ -14,7 +14,7 @@ pictureFileName = ['../../tex/img/',modelFileName,'.pdf']; % Generate name from 
 print(['-s',modelFileName],'-depsc',pictureFileName);      % Generate PDF
 
 % Read Experiment Data (expData)
-load('motorSimulation.mat');
+load('motorSimulation.mat','expData');
 v = expData.V.Data; % Input
 u = expData.U.Data;
 t = expData.U.Time;

@@ -4,9 +4,9 @@ function tfSecond = secondordertf(u,w,t)
 %   for given input,output data.
 %
 %   See also TF, DIFF.
-    dt = diff(t,1);      % dT = Ti - Ti-1
-    dW = diff(w,1)./dt;                     % dW = Wi - Wi-1
-    ddW = diff(dW,1)./dt(2:end);                   % ddW = dWi - dWi-1
+    dt = diff(t,1);                 % dT = Ti - Ti-1
+    dW = diff(w,1)./dt;             % dW = Wi - Wi-1
+    ddW = diff(dW,1)./dt(2:end);    % ddW = dWi - dWi-1
 
     B = [ddW(1:end) dW(1:end-1) w(1:end-2)];  % ignore first point
     paramSecond = (B'*B)\(B'*(u(3:end)));   % pseudo inverse
