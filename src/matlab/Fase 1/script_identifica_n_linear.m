@@ -13,79 +13,44 @@ w = dados(2,:)';
 filtro=fir1(1000,(20)*2/20000,'low');
 w1=conv(w,filtro);
 
-%% Determinando a defasagem entre a entrada e a saida
-% 
-% i=1;
-% while(v(i,1) < 0 || v(i,1) > v(i+1,1))
-%     i=i+1;
-% end
-% while(v(i,1) >= 0 && v(i,1) <= v(i+1,1))
-%     k1=v(i,1);
-%     i=i+1;
-% end
-% 
-% i=1;
-% while(w1(i,1) < 0 || w1(i,1) > w1(i+1,1))
-%     i=i+1;
-% end
-% while(w1(i,1) >= 0 && w1(i,1) <= w1(i+1,1))
-%     k2=w1(i,1);
-%     i=i+1;
-% end
-% 
-% i=1;
-% while(v(i,1) ~= k1)
-%     i=i+1;
-% end
-% k1=i-1;i=1;
-% 
-% while(w1(i,1) ~= k2)
-%     i=i+1;
-% end
-% k2=i-1;
-% 
-% difere = k2-k1;                             %Número de posições de defasagem
-
-%%
-% w1=w;
+%% Pegando os valores de delta mais no tempo de execução
 for i=1:size(w)
-   if(w(i,1) <= 0.03)
+   if(w(i,1) <= 0.03)   % Zerando a parte negativa da saída
        w(i,1) = 0;
    end
 end
 
 j=1; k=0;
 for i=1:size(v)-1
-   if(w(i,1) == 0 && w(i+1,1) > 0 && v(i,1) > 0 && k == 0)
+   if(w(i,1) == 0 && w(i+1,1) > 0 && v(i,1) > 0 && k == 0)  % Pegando valor de delta mais a cada período
        deltaPlus(j,1)=v(i,1);
        j=j+1;
        k=1;
    end
-   if(v(i,1) < 0)
+   if(v(i,1) < 0)   % Contador de período
       k=0; 
    end
 end
 
-%%
+%% Pegando os valores de delta menos no tempo de execução
 w=dados(2,:)';
 for i=1:size(w)
-   if(w(i,1) >= -0.03)
+   if(w(i,1) >= -0.03)  % Zerando a parte positiva da saída
        w(i,1) = 0;
    end
 end
 
 j=1; k=0;
 for i=1:size(v)-1
-   if(w(i,1) == 0 && w(i+1,1) < 0 && v(i,1) < 0 && k == 0)
+   if(w(i,1) == 0 && w(i+1,1) < 0 && v(i,1) < 0 && k == 0)  % Pegando valor de delta menos a cada período
        deltaMenus(j,1)=v(i,1);
        j=j+1;
        k=1;
    end
-   if(v(i,1) > 0)
+   if(v(i,1) > 0)   % Contador de período
       k=0; 
    end
 end
-% w=w1;
 
 %% Média de deltaPlus
 j=size(deltaPlus);
