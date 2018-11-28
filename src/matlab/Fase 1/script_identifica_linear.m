@@ -51,4 +51,4 @@ legend({'Entrada (v)' 'Saída (w)' 'Saída Estimada (w)'});
 clear A Const dT dw i t u v w w_e d d1 dados Parametros filtro
 
 tf_integrador=tf(1,[1 0]);
-% sisotool(tf_first*tf_integrador);
+sisotool(tf_first*tf_integrador);
