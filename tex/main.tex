@@ -56,6 +56,8 @@ Para validar o sistema foi definido um planta para simular o comportamento de um
 
 % Maior valor da entrada pelo qual a saída é zero.
 
+% Colocar Valores obtidos pelo matlab
+
 \subsection{Estimação modelo como primeira ordem}
 
 Supondo um modelo de primeira ordem com coeficientes $k_1$ e $k_2$ definido por:
@@ -135,10 +137,10 @@ Para implementar em MATLAB podemos aproximar $\dot{y}(t)$ pelo método de difere
 \dot{y}(t_i) = \dot{y}[t_i] = \frac{y[t_i] - y[t_{i-1}]}{t_i - t_{i-1}}
 \end{equation}
 
-Usando operações de matrizes o código fica bem compacta, como mostrado abaixo:
+Usando operações de matrizes o código fica bem compacto, como mostrado abaixo:
 
 % Código
-\inputminted{matlab}{../src/matlab/firstordertf.m}
+\inputminted[frame=single,framesep=10pt]{matlab}{../src/matlab/firstordertf.m}
 
 \subsection{Modelo Linear 2 ordem}
 
@@ -217,7 +219,7 @@ Isolando a matriz $P$ podemos achar o parâmetros a partir da seguinte expressã
 Em MATLAB, usando operações de matrizes a implementação fica bem compacta, como mostrado abaixo:
 
 % Código
-\inputminted{matlab}{../src/matlab/secondordertf.m}
+\inputminted[frame=single,framesep=10pt]{matlab}{../src/matlab/secondordertf.m}
 
 \subsection{Validação do Método em Simulação}
 
@@ -245,12 +247,19 @@ Nota-se que em ambos casos, existe um erro entre a resposta do sistema com os pa
 
 Em uma planta real pode ser utilizado algum sensor para medir a velocidade e a aceleração ou ainda adotar alguma aproximação melhor para aproximação da derivada.
 
+
+
 % Descrição da Planta
 %% Diagrama de descrição
+
 
 % ---------------------------------------------------------------------------------------
 
 \section{Controle PID}
+
+% Comentar brevemente sobre a estrutura de PID usada
+% Anti Windup
+
 \subsection{Planta Simulação PID}
 
 A partir dos dados da identificação, a resposta da planta com o controle PID implementado é simuladas utilizando o Simulink, ilustrada na figura \ref{fig:pidControlPlant}. Na simulação é comparado a resposta ao PID a partir das função de transferência de primeira e de segunda ordem geradas pela etapa de identificação.
@@ -262,6 +271,20 @@ A partir dos dados da identificação, a resposta da planta com o controle PID i
     \label{fig:pidControlPlant}
 \end{figure}
 
+\subsection{Ajuste dos Parâmetros}
+
+\subsubsection{SISO Tool}
+
+% ---------------------------------------------------------------------------------------
+
+\section{Controle por Espaço de Estados}
+\subsection{Modelo em Espaço de Estados}
+Como o modelo foi identificado a partir de uma função de transferência é necessário converte para a representação em espaço de estados.
+
+\subsection{Controle por alocação de polos}
+A representação por espaço de estados traz a vantagem de permitir posicionar os polos em malha fechada de maneira arbitrária facilitando atender qualquer critério de projeto.
+
+% ---------------------------------------------------------------------------------------
 \section{Conclusão}
 
 % ---------------------------------------------------------------------------------------
@@ -270,8 +293,7 @@ A partir dos dados da identificação, a resposta da planta com o controle PID i
 \bibliography{references}
 % Referências
 % Acrescentadas no arquivo references.bib
-% para usa-las no texto batsa usar \citep{}
-
+% para usa-las no texto basta usar \citep{}
 
 % ---------------------------------------------------------------------------------------
 
