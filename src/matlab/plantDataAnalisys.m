@@ -49,13 +49,25 @@ plot(time(isInterval),outputAcc(isInterval))
 hold off;
 legend('input','x(t)','v(t)');
 
-% Filter BandStop 60Hz
+%% Filter BandStop 60Hz
+lpFilt = designfilt('lowpassiir','FilterOrder',2, ...
+         'PassbandFrequency',200,'PassbandRipple',0.2, ...
+         'SampleRate', 1/min(diff(time)))
 noiseFilt = designfilt('bandstopfir','FilterOrder',20, ...
          'CutoffFrequency1',50,'CutoffFrequency2',70, ...
         'SampleRate', 1/min(diff(time)))
-inputSignal = filter(noiseFilt,inputSignal);
+filteredSignal = filter(lpFilt,outputVel);
 
-% Identification
+% Draw Plot Filter
+figure;
+isInterval = (time > 0);
+plot(time(isInterval),outputVel(isInterval))
+hold on;
+plot(time(isInterval),filteredSignal(isInterval))
+hold off;
+legend('raw','filtered');
+
+%% Identification
 isInterval = (time > 0);
 tfFirstVel = firstordertf(inputSignal(isInterval)',outputVel(isInterval)',time(isInterval)')
 tfSecondVel = secondordertf(inputSignal(isInterval)',outputVel(isInterval)',time(isInterval)')
@@ -77,13 +89,19 @@ plot(time(isInterval),outputTFSecondVel(isInterval))
 hold off;
 legend('input','x(t)','X_{m1}(t)','X_{m2}(t)');
 
+tfIntegrator = tf([1],[1 0])
+%sisotool(tfFirstVel*tfIntegrator)
+
 %% PID Control Evaluation
-Kp1 = 1000
-Ki1 = 0
-Kd1 = 0
-Kp2 = 5
-Ki2 = 5
-Kd2 = 0
+sA = 2.6e6
+sB = 2e3
+sC = 3e3
+Kp1 = -sA*(sB+sC)
+Ki1 = sA*sB*sC
+Kd1 = sA
+Kp2 = -sA*(sB+sC)
+Ki2 = sA*sB*sC
+Kd2 = sA
 modelFileName = 'dcMotorControl';
 % Run Simulation
 sim(modelFileName);
