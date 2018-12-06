@@ -53,7 +53,7 @@ end
 
 %% Resposta do seguidor de referência para condições iniciais dadas sem observador
 
-x0c=[0 0 0]';                           %Condições iniciais
+x0c=[0 0 0]';                           %Condicoes iniciais
 [Y] = lsim(Ac,Bc,Cc,Dc,u,t,x0c); 
 figure; plot(t,Y,'b',t,u,'r');
 title('Saída do Sistema com Seguidor de Referência'); axis([0 max(t) 0 1.2])
