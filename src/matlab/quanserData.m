@@ -28,7 +28,7 @@ for i = 1:4
     % Plot
     figure;
     timeInterval = time < 20;
-    plot(time(timeInterval),u(timeInterval),time(timeInterval),y(timeInterval))
+    plot(time(timeInterval),u(timeInterval),'--',time(timeInterval),y(timeInterval),'-')
     legend('Input','Output');
     title(['Resposta PID ( f = ',num2str(f),' Hz , a = ',num2str(stepSize),'^\circ )']);
 
@@ -64,7 +64,7 @@ for i = 1:8
     % Plot
     figure;
     timeInterval = time < 20;
-    plot(time(timeInterval),u(timeInterval),time(timeInterval),y(timeInterval))
+    plot(time(timeInterval),u(timeInterval),'--',time(timeInterval),y(timeInterval),'-')
     legend('Input','Output');
     title(['Resposta SS ( f = ',num2str(f),' Hz , a = ',num2str(stepSize),'^\circ )']);
 
