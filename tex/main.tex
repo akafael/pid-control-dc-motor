@@ -65,15 +65,7 @@ Para entender a dinâmica de um sistema uma boa maneira é observando a saída a
 
 
 
-Para validar o sistema foi definido um planta para simular o comportamento de um sistema de primeira ordem e um sistema de segunda ordem para uma mesma entrada. O sinal de entrada e a resposta de saída do sistema é então armazenado em arquivo \textit{.mat} para leitura posterior.
 
-% Modelo Figura
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1.0\linewidth]{tex/img/dcMotorSimulation.pdf}
-    \caption{Planta Simulação}
-    \label{fig:my_label}
-\end{figure}
 
 \subsection{Região Não-linear}
 Idealmente para qualquer tanto de tensão aplicada, o motor responderia com uma velocidade proporcional. No entanto, como foi possível observar a partir do gráfico na figura \ref{fig:entrada_saida_real}, existe de fato uma não-linearidade na resposta a entrada. Esse efeito é chamado de Zona Morta ou Banda Morta e para o melhor funcionamento da dinâmica do sistema, deve ser evitado ou compensado. Para tanto, foi utilizada a seguinte planta genérica para validar o modelo de identificação da Zona Morta a partir de parâmetros conhecidos.
@@ -82,8 +74,8 @@ Idealmente para qualquer tanto de tensão aplicada, o motor responderia com uma 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1.0\linewidth]{tex/img/Sistema_Generico.png}
-    \caption{Sistema Genérico de Validação}
-    \label{fig:sistema_generico_}
+    \caption{Sistema Genérico de Validação da Parte Não-linear}
+    \label{fig:sistema_generico_nlinear}
 \end{figure}
 
 \begin{equation}
