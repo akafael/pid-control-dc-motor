@@ -35,7 +35,7 @@ Para identificar todos os parâmetros da função de transferência que rege a d
 
 Com a identificação finalizada foi iniciada a parte de controle. A partir da função de transferência do sistema o controle PID foi desenvolvido utilizando a ferramenta \textit{Sisotool} do \textit{MATLAB}. E transformando a função de transferência para espaço de estados, foi também desenvolvido o controle para o sistema em espaço de estados.
 
-Para gestão do projeto e de suas fases foi utilizada a plataforma \textit{GitHub}, para comunicação entre os membros do trabalho o textit{WhatsApp} e para a escrita deste relatório a plataforma \textit{Overleaf}. 
+Para gestão do projeto e de suas fases foram utilizadas as plataformas \textit{GitHub} como repositório, \textit{WhatsApp} para comunicação entre os membros do trabalho e \textit{Overleaf} para a escrita deste relatório. 
 
 % http://ctms.engin.umich.edu/CTMS/index.php?example=MotorSpeed&section=SystemModeling
 % http://ctms.engin.umich.edu/CTMS/index.php?example=MotorSpeed&section=SimulinkModeling
@@ -53,6 +53,8 @@ Para gestão do projeto e de suas fases foi utilizada a plataforma \textit{GitHu
 % http://www.eletrica.ufpr.br/~gustavo/controle_digital/Intro_Ident_Intro_v23abr12.pdf
 % convert from ft to ss https://www.mathworks.com/help/signal/ref/tf2ss.html
 % convert from ss to ft https://www.mathworks.com/help/matlab/ref/ss2tf.html
+
+Para entender a dinâmica de um sistema uma boa maneira é observando a saída ao aplicar uma entrada. As formas de ondas de entrada para uma melhor compreensão do funcionamento do sistema são ondas triangulares e quadradas. Entradas triangulares dão uma visão das não-linearidades dos sistema, ou seja, a partir de que valor de entrada é possível observar uma saída. E entradas quadradas 
 
 Para validar o sistema foi definido um planta para simular o comportamento de um sistema de primeira ordem e um sistema de segunda ordem para uma mesma entrada. O sinal de entrada e a resposta de saída do sistema é então armazenado em arquivo \textit{.mat} para leitura posterior.
 
