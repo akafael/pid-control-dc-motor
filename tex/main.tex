@@ -54,7 +54,16 @@ Para gestão do projeto e de suas fases foram utilizadas as plataformas \textit{
 % convert from ft to ss https://www.mathworks.com/help/signal/ref/tf2ss.html
 % convert from ss to ft https://www.mathworks.com/help/matlab/ref/ss2tf.html
 
-Para entender a dinâmica de um sistema uma boa maneira é observando a saída ao aplicar uma entrada. As formas de ondas de entrada para uma melhor compreensão do funcionamento do sistema são ondas triangulares e quadradas. Entradas triangulares dão uma visão das não-linearidades dos sistema, ou seja, a partir de que valor de entrada é possível observar uma saída. E entradas quadradas 
+Para entender a dinâmica de um sistema uma boa maneira é observando a saída ao aplicar uma entrada. As formas de ondas de entrada para uma melhor compreensão do funcionamento do sistema são ondas triangulares e quadradas. Entradas triangulares dão uma visão das não-linearidades dos sistema, ou seja, a partir de que valor de entrada é possível observar uma saída, isso acontece devido aos atritos dos engrenamentos. E entradas quadradas possibilitam a identificação dos parâmetros da função de transferência, como será demonstrado. Assim, a primeira parte nessa etapa é a identificação de não-linearidades. A entrada e saída da planta real pode ser observada na figura abaixo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{tex/img/Entrada_e_Saida.jpg}
+    \caption{Entrada e Saída do Sistema Real}
+    \label{fig:entrada_saida_real}
+\end{figure}
+
+
 
 Para validar o sistema foi definido um planta para simular o comportamento de um sistema de primeira ordem e um sistema de segunda ordem para uma mesma entrada. O sinal de entrada e a resposta de saída do sistema é então armazenado em arquivo \textit{.mat} para leitura posterior.
 
@@ -66,9 +75,16 @@ Para validar o sistema foi definido um planta para simular o comportamento de um
     \label{fig:my_label}
 \end{figure}
 
-\subsection{Região não Linear - Zona Morta}
+\subsection{Região Não-linear}
+Idealmente para qualquer tanto de tensão aplicada, o motor responderia com uma velocidade proporcional. No entanto, como foi possível observar a partir do gráfico na figura \ref{fig:entrada_saida_real}, existe de fato uma não-linearidade na resposta a entrada. Esse efeito é chamado de Zona Morta ou Banda Morta e para o melhor funcionamento da dinâmica do sistema, deve ser evitado ou compensado. Para tanto, foi utilizada a seguinte planta genérica para validar o modelo de identificação da Zona Morta a partir de parâmetros conhecidos.
 
-Idealmente para qualquer tanto de tensão aplicada, o motor responderia com uma velocidade proporcional. No entanto na prática existe um tanto de energia mínimo para se fornecer até o motor romper a inércia e começar a mover. Esta região é denominada Zona Morta ou Banda Morta. E pode ser representada pela seguinte função:
+% Modelo Figura
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{tex/img/Sistema_Generico.png}
+    \caption{Sistema Genérico de Validação}
+    \label{fig:sistema_generico_}
+\end{figure}
 
 \begin{equation}
     y_{dz}(x) = 
@@ -79,7 +95,7 @@ Idealmente para qualquer tanto de tensão aplicada, o motor responderia com uma 
 \end{array} \right.
 \end{equation}
 
-Para identificar esta região, buscamos pelo o maior valor e o menor valor para a entrada tal que a saída seja zero. E assim podemos remover o efeito desta região no controlador depois. Segue o código usado para identificação:
+Para identificar esta região, buscamos pelo o maior valor e o menor valor para a entrada tal que a saída seja zero. E assim foi possível remover o efeito desta região no controlador depois. Segue o código usado para identificação:
 
 % Código
 \inputminted[frame=single,framesep=10pt]{matlab}{../src/matlab/deadzoneindetify.m}
@@ -548,7 +564,14 @@ k3 = solve(PolK(4),K3);
 
 \subsection{Implementação na Planta Real}
 
-Para valores de ângulos menores o controlador em espaço de estados implementado obteve uma resposta mais rápida que o PID, permitindo o uso de frequências maiores como demonstrado na figura \ref{fig:quanserss_s45num1}.
+Para valores de ângulos menores o controlador em espaço de estados implementado obteve uma resposta mais rápida que o PID, permitindo o uso de frequências maiores como demonstrado na figura \ref{fig:quanserss_s10num1} e \ref{fig:quanserss_s45num1}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{tex/img/quanserss_s10num1.png}
+    \caption{Experimento SS 10 graus}
+    \label{fig:quanserss_s10num1}
+\end{figure}
 
 \begin{figure}[H]
     \centering
@@ -556,6 +579,7 @@ Para valores de ângulos menores o controlador em espaço de estados implementad
     \caption{Experimento SS 45 graus}
     \label{fig:quanserss_s45num1}
 \end{figure}
+
 
 No entanto, para um valor alto de para o ângulo de referência, o controlador gerou um sobresinal. O que pode ser explicado pela saturação do motor. Tendo que no controlador em espaço de estados funciona a partir de um conjunto de integradores e como não foi implementado alguma forma de anti wind-up o erro foi acumulado com a saturação da velocidade gerando um sobresinal.
 
@@ -592,6 +616,34 @@ Ainda com as aproximações usadas, o método de identificação usado conduziu 
 % para usa-las no texto basta usar \citep{}
 
 \nocite{ogata2010modern}
+
+% ---------------------------------------------------------------------------------------
+
+\newpage
+
+\begin{center}
+    \huge \textbf{Laboratório de Controle Dinâmico \\}
+\end{center}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|p{6cm}|c|}
+    \hline
+         & Atribuições & Assinatura \\
+    \hline
+                        & 1. Identificação do Modelo & \\
+    Tiago Pereira Neves & 2. Projeto do Controlador PID & \\
+                        & 3. Projeto do Controlador SS & \\
+    \hline
+
+                & 1. Identificação do Modelo &\\
+    Rafael Lima & 2. Formatação Relatório &\\
+                & 3. Análise de Dados Experimentais& \\
+     \hline
+    \end{tabular}
+\end{table}
+
+\thispagestyle{empty}
 
 % ---------------------------------------------------------------------------------------
 
