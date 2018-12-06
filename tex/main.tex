@@ -54,6 +54,22 @@ Para validar o sistema foi definido um planta para simular o comportamento de um
 
 \subsection{Região não Linear - Zona Morta}
 
+Idealmente para qualquer tanto de tensão aplicada, o motor responderia com uma velocidade proporcional. No entanto na prática existe um tanto de energia mínimo para se fornecer até o motor romper a inércia e começar a mover. Esta região é denominada Zona Morta ou Banda Morta. E podemos representar pela seguinte função:
+
+\begin{equation}
+    y_{dz}(x) = 
+    \left\{\begin{array}{c}
+    y(x), x > \delta_{max} \\
+    y(x), x < \delta_{min} \\
+    0, \delta_{-} < x < \delta_{+} \\
+\end{array} \right.
+\end{equation}
+
+Para identificar esta região, buscamos pelo o maior valor e o menor valor para a entrada tal que a saída seja zero. E assim podemos remover o efeito desta região no controlador depois. Segue o código usado para identificação:
+
+% Código
+\inputminted[frame=single,framesep=10pt]{matlab}{../src/matlab/deadzoneindetify.m}
+
 % Maior valor da entrada pelo qual a saída é zero.
 
 % Colocar Valores obtidos pelo matlab
@@ -62,7 +78,7 @@ Para validar o sistema foi definido um planta para simular o comportamento de um
 
 Supondo um modelo de primeira ordem com coeficientes $k_1$ e $k_2$ definido por:
 
-\begin{equation}
+\begin{equation}\label{eq:firstordertf}
     H_1(s) = \frac{Y(s)}{X(s)} = \frac{1}{k_1 s+ k_2}
 \end{equation}
 
@@ -146,7 +162,7 @@ Usando operações de matrizes o código fica bem compacto, como mostrado abaixo
 
 Supondo um modelo de primeira ordem com coeficientes $k_1$, $k_2$ e $k_3$ definido por:
 
-\begin{equation}
+\begin{equation}\label{eq:secondordertf}
     H_2(s) = \frac{Y(s)}{X(s)} = \frac{1}{k_1 s^2+ k_2 s+ k_3}
 \end{equation}
 
@@ -260,6 +276,14 @@ Em uma planta real pode ser utilizado algum sensor para medir a velocidade e a a
 % Comentar brevemente sobre a estrutura de PID usada
 % Anti Windup
 
+Para projeto de um sistema de controle para a posição foi usado um controlador do tipo PID, no seguinte formato:
+
+\begin{equation}
+    G_c(s) = K_p + Kd s + \frac{Ki}{s}
+\end{equation}
+
+No entanto esta estrutura traz um problema. Quando o atuador satura a integral continua sendo calculada e acaba gerando um overshot fazendo com que o sistema demore mais tempo para entrar em regime permante. Como forma de resolver isto foi implementado a estrutura do PID com Anti Windup, que basicamente bloqueia a integral nos momentos em que esta não é interessante.
+
 \subsection{Planta Simulação PID}
 
 A partir dos dados da identificação, a resposta da planta com o controle PID implementado é simuladas utilizando o Simulink, ilustrada na figura \ref{fig:pidControlPlant}. Na simulação é comparado a resposta ao PID a partir das função de transferência de primeira e de segunda ordem geradas pela etapa de identificação.
@@ -273,19 +297,225 @@ A partir dos dados da identificação, a resposta da planta com o controle PID i
 
 \subsection{Ajuste dos Parâmetros}
 
-\subsubsection{SISO Tool}
+Existe diversas formas de ajuste dos parâmetros de um controlador PID conforme os critérios de projeto. Para este projeto do menor tempo de subida para a resposta sem overshot. Para tal foi utilizado a ferramenta \textit{sisotool} do Matlab para definir os ganhos do controlador através do posicionamento dos polos e zeros em malha fechada. A partir deste procedimento foram definidos os seguintes valores para os ganhos, registrados na tabela \ref{tab:pid_param}
+
+\begin{table}[H]
+    \centering
+    $$\begin{array}{ccc}
+    \hline
+        K_p & K_i & K_d\\
+    \hline
+         &  &\\
+     \hline
+    \end{array}$$
+    \caption{Parâmetros Controlador PID}
+    \label{tab:pid_param}
+\end{table}
+
+% Foto SISO Tool
+
+\subsection{Implementação na Planta Real}
+
+Uma vez simulado e testado, o controlador projetado foi avaliado na planta real. Foi notado uma leve diferença na resposta, o que é justificável, uma vez que o modelo obtido é uma aproximação do modelo real. Porém a resposta na planta real satisfez por completo os critérios de projeto, conforme mostrado na figura \ref{fig:quaser_pid}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics{}
+    \caption{Resposta Planta Real PID}
+    \label{fig:quaser_pid}
+\end{figure}
+
+Em seguida foram avaliados a resposta do mesmo controlador para outras condições de frequência de entrada e amplitude do sinal.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics{}
+    \caption{Resposta Planta Real PID 2}
+    \label{fig:quaser_pid2}
+\end{figure}
 
 % ---------------------------------------------------------------------------------------
-
 \section{Controle por Espaço de Estados}
+
+Foi avaliado também o controle por alocação de polos utilizando a representação no espaço de estados. Esta forma de representação permite um posicionamento mais livre dos polos em malha fechada garantindo um melhor desempenho do sistema.
+
+\begin{equation}
+\left\{
+\begin{array}{c}
+    \dot{X} = A X + B U \\
+    Y = C X + D U \\
+\end{array}
+\right.
+\end{equation}
+
+Na figura \ref{fig:space_state_model} temos a representação de um sistema genérico no espaço de estados.
+
+% Espaço de estados
+\begin{figure}[H]
+    \centering
+    \includegraphics{tex/img/space_state_model.png}
+    \caption{Estrutura da Representação em Espaço de Estados}
+    \label{fig:space_state_model}
+\end{figure}
+
 \subsection{Modelo em Espaço de Estados}
-Como o modelo foi identificado a partir de uma função de transferência é necessário converter para a representação em espaço de estados.
+Como o modelo foi identificado a partir de uma função de transferência é necessário converter para a representação em espaço de estados. Para um dado sistema existem infinitas representações possíveis.
+
+No caso o sistema de primeira ordem, descrito em \ref{eq:firstordertf} temos:
+
+$$
+G_1(s) = H_1(s)\cdot \frac{1}{s} = \frac{1}{k_1 s^2+ k_2 s} = \frac{1}{s^2+ \frac{k_2}{k_1} s}
+$$
+
+A partir do qual podemos escrever a matriz na forma controlada como
+
+\begin{equation}
+\left\{
+\begin{array}{rcl}
+\left[\begin{array}{c}
+    \dot{X_1} \\
+    \dot{X_2} \\
+\end{array}
+\right]
+&
+=
+&
+\left[
+\begin{array}{cc}
+    0 & 1 \\
+    -\frac{k_2}{k_1} & 0 \\ 
+\end{array}
+\right]
+\left[\begin{array}{c}
+    X_1 \\
+    X_2 \\
+\end{array}
+\right]
++
+\left[\begin{array}{c}
+    0 \\
+    1 \\
+\end{array}
+\right]
+U\\
+Y & = &\left[
+\begin{array}{cc}
+    1 & 0 \\
+\end{array}
+\right]
+\left[\begin{array}{c}
+    X_1 \\
+    X_2 \\
+\end{array}
+\right]
+\end{array}
+\right.
+\end{equation}
+
+De forma similar tempos para o caso do sistema de segunda ordem, descrito em \ref{eq:secondordertf}:
+
+$$
+G_2(s) = H_2(s)\cdot \frac{1}{s} = \frac{1}{k_1 s^3 + k_2 s^2 + k_3 s} = \frac{1}{s^3 + \frac{k_2}{k_1} s^2 + \frac{k_3}{k_1} s}
+$$
+
+A partir do qual podemos escrever a matriz na forma controlada como
+
+\begin{equation}
+\left\{
+\begin{array}{rcl}
+\left[\begin{array}{c}
+    \dot{X_1} \\
+    \dot{X_2} \\
+    \dot{X_3} \\
+\end{array}
+\right]
+&
+=
+&
+\left[
+\begin{array}{ccc}
+    0 & 1 & 0 \\
+    0 & 0 & 1 \\
+    -\frac{k_2}{k_1} & -\frac{k_3}{k_1} & 0 \\ 
+\end{array}
+\right]
+\left[\begin{array}{c}
+    X_1 \\
+    X_2 \\
+    X_3 \\
+\end{array}
+\right]
++
+\left[\begin{array}{c}
+    0 \\
+    0 \\
+    1 \\
+\end{array}
+\right]
+U\\
+Y & = &\left[
+\begin{array}{ccc}
+    1 & 0 & 0 \\
+\end{array}
+\right]
+\left[\begin{array}{c}
+    X_1 \\
+    X_2 \\
+    X_3 \\
+\end{array}
+\right]
+\end{array}
+\right.
+\end{equation}
+
+No Matlab, para ambos casos foi usado a função $tf2ss$ que converte direto da representação como função de transferência para espaço de estados. Embora seja prático, a matriz final não possui interpretação física dos valores.
 
 \subsection{Controle por alocação de polos}
+
 A representação por espaço de estados traz a vantagem de permitir posicionar os polos em malha fechada de maneira arbitrária facilitando atender qualquer critério de projeto.
 
+De forma similar foi feito no Matlab com ajuda do comando \textit{solve} para resolução de equações simbólicas, conforme mostrado no código abaixo:
+
+\begin{minted}[frame=single,framesep=10pt]{matlab}
+%% Converte a função de transferência em espaço de estados 
+[A, B, C, D] = tf2ss(28.22,[0.1 1 0]);
+
+%% Define Polos Desejados
+Polos = [complex(-8,-0),complex(-9,0),complex(-10,0)];
+
+%% Calculo do ganho K para controlador em malha fechada 
+Aa = [A zeros(2,1);-C 0];               %Matriz A do sistema estendido
+Ba = [B;0];                             %Matriz B do sistema estendido
+K1 = sym('K_1');
+K2 = sym('K_2');
+K3 = sym('K_3');
+KK = [K1 K2 K3];
+
+%% Acha Polinômio Característico Controlador para K simbólico
+Ac = Aa-Ba*KK;
+I = eye(size(Ac));
+x = sym('s')*I-Ac;
+PolControle = wrev(coeffs(det(x),'s'));
+
+%% Resolve as equações para determinar os ganhos
+PolDesejado = poly(Polos);
+PolK = (PolControle - PolDesejado);
+k1 = solve(PolK(2),K1);
+k2 = solve(PolK(3),K2);
+k3 = solve(PolK(4),K3);
+\end{minted}
+
 % ---------------------------------------------------------------------------------------
+
+\subsection{Implementação na Planta Real}
+
+A partir
+
 \section{Conclusão}
+
+Através de ambos projetos foi possível compreender o funcionamento de dois tipos de controladores diferentes e comumente encontrados PID e controle baseado em espaço de estados. Embora o controle PID seja mais simples de implementar em sistemas analógicos. No entanto, para a planta analisada o controle por alocação de polos no sistema em espaço de estados se mostrou mais simples de ajustar e implementar, uma vez que todas as contas podem ser feitas diretamente no Matlab. O que reduziu bastante o esforço no ajuste dos parâmetros.
+
+Ainda com as aproximações usadas, o método de identificação usado conduziu a um resultado satisfatório dentro dos objetivos pretendidos. Tendo sido notado um leve diferença para a resposta de ambos controladores implementados na plata real em relação a simulação. Em particular a resposta no espaço de estados apresentou um leve overshot (1\%) quando foi projetado uma resposta amortecida. Enquanto para o PID o desempenho real foi melhor que em simulação.
 
 % ---------------------------------------------------------------------------------------
 
@@ -294,6 +524,8 @@ A representação por espaço de estados traz a vantagem de permitir posicionar 
 % Referências
 % Acrescentadas no arquivo references.bib
 % para usa-las no texto basta usar \citep{}
+
+\nocite{ogata2010modern}
 
 % ---------------------------------------------------------------------------------------
 
