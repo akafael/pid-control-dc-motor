@@ -19,12 +19,24 @@
 
 % Material de referência - prof
 % https://drive.google.com/drive/folders/1IDdc7QVsdYIASgZzNlUelhGF_FaV2_EJ
+\section{Resumo}
 
-\section{Descrição da Planta}
+Neste relatório é aborda a problemática de controle de um sistema rotativo da \textit{Quanser} modelo \textit{SRV02}. Com base na teoria de engenharia de controle, são apresentados os passos para identificação do modelo, incluindo suas não-linearidades. Após identificação completa do modelo são propostos dois controles de diferentes abordagens para o controle de posição angular do sistema, o primeiro é realizado com controle Proporcional-Integrativo-Derivativo (PID) e o segundo com modelo em Espaço de Estados.
 
-\subsection{Modelo Motor DC}
+\section{Introdução}
 
 % Como modelar um motor ------------------------------
+
+\section{Metodologia}
+
+Neste trabalho o problema de controle de um sistema é abordado de maneira completa. Desde a identificação, modelagem e controle é assumido que não é conhecida a dinâmica do sistema, ainda que a empresa fabricante tenha fornecido o \textit{Workbook} (CITAR REFERÊNCIA) do \textit{Kit} deste estudo. Desta forma o trabalho se aproxima do que o Engenheiro se deparará muitas vezes no mercado de trabalho, quando não se sabe nenhum parâmetro do sistema a ser controlado. Assim, o projeto foi dividido em três Fases: 1ª - identificação e modelagem. 2ª - desenvolvimento de um controle PID. 3ª - desenvolvimento de um controle em espaço de estados.
+
+Para identificar todos os parâmetros da função de transferência que rege a dinâmica de um sistema e possíveis não-linearidades que afetam essa dinâmica foi utilizada uma planta genérica afim de criar uma metodologia válida para ser aplicada no sistema real. Após validar a metodologia de identificação foi possível ao sistema real e obter seus parâmetros.
+
+Com a identificação finalizada foi iniciada a parte de controle. A partir da função de transferência do sistema o controle PID foi desenvolvido utilizando a ferramenta \textit{Sisotool} do \textit{MATLAB}. E transformando a função de transferência para espaço de estados, foi também desenvolvido o controle para o sistema em espaço de estados.
+
+Para gestão do projeto e de suas fases foi utilizada a plataforma \textit{GitHub}, para comunicação entre os membros do trabalho o textit{WhatsApp} e para a escrita deste relatório a plataforma \textit{Overleaf}. 
+
 % http://ctms.engin.umich.edu/CTMS/index.php?example=MotorSpeed&section=SystemModeling
 % http://ctms.engin.umich.edu/CTMS/index.php?example=MotorSpeed&section=SimulinkModeling
 % http://www.inf.fu-berlin.de/lehre/WS04/Robotik/motors.pdf
@@ -36,7 +48,7 @@
 % Técnica antiga de controle ------------------------
 % https://en.wikipedia.org/wiki/Ward_Leonard_control
 
-\section{Identificação de Parâmetros}
+\section{Identificação e Modelagem}
 
 % http://www.eletrica.ufpr.br/~gustavo/controle_digital/Intro_Ident_Intro_v23abr12.pdf
 % convert from ft to ss https://www.mathworks.com/help/signal/ref/tf2ss.html
@@ -54,7 +66,7 @@ Para validar o sistema foi definido um planta para simular o comportamento de um
 
 \subsection{Região não Linear - Zona Morta}
 
-Idealmente para qualquer tanto de tensão aplicada, o motor responderia com uma velocidade proporcional. No entanto na prática existe um tanto de energia mínimo para se fornecer até o motor romper a inércia e começar a mover. Esta região é denominada Zona Morta ou Banda Morta. E podemos representar pela seguinte função:
+Idealmente para qualquer tanto de tensão aplicada, o motor responderia com uma velocidade proporcional. No entanto na prática existe um tanto de energia mínimo para se fornecer até o motor romper a inércia e começar a mover. Esta região é denominada Zona Morta ou Banda Morta. E pode ser representada pela seguinte função:
 
 \begin{equation}
     y_{dz}(x) = 
@@ -264,14 +276,30 @@ Nota-se que em ambos casos, existe um erro entre a resposta do sistema com os pa
 Em uma planta real pode ser utilizado algum sensor para medir a velocidade e a aceleração ou ainda adotar alguma aproximação melhor para aproximação da derivada.
 
 
-
 % Descrição da Planta
 %% Diagrama de descrição
 
+\subsection{Resultados Obtidos Planta Real}
+
+Uma vez validado o método e aplicando para os dados reais foram obtidos os seguintes valores para os coeficientes, conforme mostrado na tabela \ref{tab:tf}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{r|ccc}
+    \hline
+        Modelo & $s^2$ & $s^1$ & $s^0$ \\
+     \hline
+        Primeira Ordem & - & & \\
+        Segunda Ordem & - & & \\
+     \hline
+    \end{tabular}
+    \caption{Valores dos coeficientes obtidos pela identificação}
+    \label{tab:tf}
+\end{table}
 
 % ---------------------------------------------------------------------------------------
 
-\section{Controle PID}
+\section{Controle Proporcional-Integrativo-Derivativo}
 
 % Comentar brevemente sobre a estrutura de PID usada
 % Anti Windup
@@ -282,11 +310,11 @@ Para projeto de um sistema de controle para a posição foi usado um controlador
     G_c(s) = K_p + Kd s + \frac{Ki}{s}
 \end{equation}
 
-No entanto esta estrutura traz um problema. Quando o atuador satura a integral continua sendo calculada e acaba gerando um overshot fazendo com que o sistema demore mais tempo para entrar em regime permante. Como forma de resolver isto foi implementado a estrutura do PID com Anti Windup, que basicamente bloqueia a integral nos momentos em que esta não é interessante.
+No entanto esta estrutura traz um problema. Quando o atuador satura a integral continua sendo calculada e acaba gerando um sobresinal fazendo com que o sistema demore mais tempo para entrar em regime permante. Como forma de resolver isto foi implementado a estrutura do PID com Anti Windup, que basicamente bloqueia a integral nos momentos em que esta não é interessante.
 
 %http://www.cds.caltech.edu/~murray/books/AM08/pdf/am06-pid_16Sep06.pdf
 
-\subsection{Planta Simulação PID}
+\subsection{Estrutura da Planta}
 
 A partir dos dados da identificação, a resposta da planta com o controle PID implementado é simuladas utilizando o Simulink, ilustrada na figura \ref{fig:pidControlPlant}. Na simulação é comparado a resposta ao PID a partir das função de transferência de primeira e de segunda ordem geradas pela etapa de identificação.
 
@@ -299,7 +327,7 @@ A partir dos dados da identificação, a resposta da planta com o controle PID i
 
 \subsection{Ajuste dos Parâmetros}
 
-Existe diversas formas de ajuste dos parâmetros de um controlador PID conforme os critérios de projeto. Para este projeto do menor tempo de subida para a resposta sem overshot. Para tal foi utilizado a ferramenta \textit{sisotool} do Matlab para definir os ganhos do controlador através do posicionamento dos polos e zeros em malha fechada. A partir deste procedimento foram definidos os seguintes valores para os ganhos, registrados na tabela \ref{tab:pid_param}
+Existe diversas formas de ajuste dos parâmetros de um controlador PID conforme os critérios de projeto. Para este projeto do menor tempo de subida para a resposta sem sobresinal. Para tal foi utilizado a ferramenta \textit{sisotool} do Matlab para definir os ganhos do controlador através do posicionamento dos polos e zeros em malha fechada. A partir deste procedimento foram definidos os seguintes valores para os ganhos, registrados na tabela \ref{tab:pid_param}
 
 \begin{table}[H]
     \centering
@@ -318,26 +346,35 @@ Existe diversas formas de ajuste dos parâmetros de um controlador PID conforme 
 
 \subsection{Implementação na Planta Real}
 
-Uma vez simulado e testado, o controlador projetado foi avaliado na planta real. Foi notado uma leve diferença na resposta, o que é justificável, uma vez que o modelo obtido é uma aproximação do modelo real. Porém a resposta na planta real satisfez por completo os critérios de projeto, conforme mostrado na figura \ref{fig:quaser_pid}
+Uma vez simulado e testado, o controlador projetado foi avaliado na planta real. Foi notado uma leve diferença na resposta, o que é justificável, uma vez que o modelo obtido é uma aproximação do modelo real. Porém a resposta na planta real satisfez por completo os critérios de projeto, conforme mostrado na figura \ref{fig:quaser_pid}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics{}
+    \includegraphics[width=0.8\linewidth]{tex/img/quanserpid_s90num5.png}
     \caption{Resposta Planta Real PID}
     \label{fig:quaser_pid}
 \end{figure}
 
-Em seguida foram avaliados a resposta do mesmo controlador para outras condições de frequência de entrada e amplitude do sinal.
+Em seguida foram avaliados a resposta do mesmo controlador para outras condições de frequência de entrada e amplitude do sinal. Para uma frequência de $1Hz$ e um ângulo de $45^\circ$ foi notado que o controlador não conseguiu acompanhar a referência, ilustrado na figura \ref{fig:quanserpid_s45num1}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics{}
-    \caption{Resposta Planta Real PID 2}
-    \label{fig:quaser_pid2}
+    \includegraphics[width=0.8\linewidth]{tex/img/quanserpid_s45num1.png}
+    \caption{Resposta Planta Real PID 45 graus}
+    \label{fig:quanserpid_s45num1}
+\end{figure}
+
+No entanto, para o experimento com um valor grande de variação com ângulo de $180^\circ$ o controlador manteve um bom desempenho, porém foi notado apenas um erro em regime permanente para a reião com o valor de entrada positivo maior que para a região com entrada negativo, como mostrado na figura \ref{quanserpid_s180num5}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{tex/img/quanserpid_s180num5.png}
+    \caption{Resposta Planta Real PID 180 graus}
+    \label{fig:quanserpid_s180num5}
 \end{figure}
 
 % ---------------------------------------------------------------------------------------
-\section{Controle por Espaço de Estados}
+\section{Controle em Espaço de Estados}
 
 Foi avaliado também o controle por alocação de polos utilizando a representação no espaço de estados. Esta forma de representação permite um posicionamento mais livre dos polos em malha fechada garantindo um melhor desempenho do sistema.
 
@@ -360,7 +397,7 @@ Na figura \ref{fig:space_state_model} temos a representação de um sistema gen�
     \label{fig:space_state_model}
 \end{figure}
 
-\subsection{Modelo em Espaço de Estados}
+\subsection{Modelo}
 Como o modelo foi identificado a partir de uma função de transferência é necessário converter para a representação em espaço de estados. Para um dado sistema existem infinitas representações possíveis.
 
 No caso o sistema de primeira ordem, descrito em \ref{eq:firstordertf} temos:
@@ -472,7 +509,7 @@ Y & = &\left[
 
 No Matlab, para ambos casos foi usado a função $tf2ss$ que converte direto da representação como função de transferência para espaço de estados. Embora seja prático, a matriz final não possui interpretação física dos valores.
 
-\subsection{Controle por alocação de polos}
+\subsection{Alocação de Polos}
 
 A representação por espaço de estados traz a vantagem de permitir posicionar os polos em malha fechada de maneira arbitrária facilitando atender qualquer critério de projeto.
 
@@ -507,17 +544,42 @@ k2 = solve(PolK(3),K2);
 k3 = solve(PolK(4),K3);
 \end{minted}
 
-% ---------------------------------------------------------------------------------------
-
 \subsection{Implementação na Planta Real}
 
-A partir
+Para valores de ângulos menores o controlador em espaço de estados implementado obteve uma resposta mais rápida que o PID, permitindo o uso de frequências maiores como demonstrado na figura \ref{fig:quanserss_s45num1}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{tex/img/quanserss_s45num1.png}
+    \caption{Experimento SS 45 graus}
+    \label{fig:quanserss_s45num1}
+\end{figure}
+
+No entanto, para um valor alto de para o ângulo de referência, o controlador gerou um sobresinal. O que pode ser explicado pela saturação do motor. Tendo que no controlador em espaço de estados funciona a partir de um conjunto de integradores e como não foi implementado alguma forma de anti wind-up o erro foi acumulado com a saturação da velocidade gerando um sobresinal.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{tex/img/quanserss_s90num5.png}
+    \caption{Experimento SS 90 graus}
+    \label{fig:quanserss_s90num5}
+\end{figure}
+
+Notadamente, ao solicitar uma velocidade alta para controlador, por meio de uma sinal de referência com $\theta = 180^\circ$ e frequência $f = 1Hz$ o controlador não conseguiu acompanhar a referência, conforme mostrado na figura \ref{fig:quanserss_s180num1}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{tex/img/quanserss_s180num1.png}
+    \caption{Experimento SS 180 graus}
+    \label{fig:quanserss_s180num1}
+\end{figure}
+
+% ---------------------------------------------------------------------------------------
 
 \section{Conclusão}
 
 Através de ambos projetos foi possível compreender o funcionamento de dois tipos de controladores diferentes e comumente encontrados PID e controle baseado em espaço de estados. Embora o controle PID seja mais simples de implementar em sistemas analógicos. No entanto, para a planta analisada o controle por alocação de polos no sistema em espaço de estados se mostrou mais simples de ajustar e implementar, uma vez que todas as contas podem ser feitas diretamente no Matlab. O que reduziu bastante o esforço no ajuste dos parâmetros.
 
-Ainda com as aproximações usadas, o método de identificação usado conduziu a um resultado satisfatório dentro dos objetivos pretendidos. Tendo sido notado um leve diferença para a resposta de ambos controladores implementados na plata real em relação a simulação. Em particular a resposta no espaço de estados apresentou um leve overshot (1\%) quando foi projetado uma resposta amortecida. Enquanto para o PID o desempenho real foi melhor que em simulação.
+Ainda com as aproximações usadas, o método de identificação usado conduziu a um resultado satisfatório dentro dos objetivos pretendidos. Tendo sido notado um leve diferença para a resposta de ambos controladores implementados na plata real em relação a simulação. Em particular a resposta no espaço de estados apresentou um leve sobresinal (1\%) quando foi projetado uma resposta amortecida. Enquanto para o PID o desempenho real foi melhor que em simulação.
 
 % ---------------------------------------------------------------------------------------
 
