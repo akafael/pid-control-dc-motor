@@ -78,6 +78,8 @@ Idealmente para qualquer tanto de tensão aplicada, o motor responderia com uma 
     \label{fig:sistema_generico_nlinear}
 \end{figure}
 
+Para identificar a Banda Morta, buscamos pelo o maior valor e o menor valor para a entrada tal que a saída seja zero. E assim remover o efeito desta região no controlador posteriormente.
+
 \begin{equation}
     y_{dz}(x) = 
     \left\{\begin{array}{c}
@@ -87,12 +89,14 @@ Idealmente para qualquer tanto de tensão aplicada, o motor responderia com uma 
 \end{array} \right.
 \end{equation}
 
-Para identificar esta região, buscamos pelo o maior valor e o menor valor para a entrada tal que a saída seja zero. E assim foi possível remover o efeito desta região no controlador depois. Segue o código usado para identificação:
+Segue o código usado para identificação:
 
 % Código
 \inputminted[frame=single,framesep=10pt]{matlab}{../src/matlab/deadzoneindetify.m}
 
 % Maior valor da entrada pelo qual a saída é zero.
+
+Com essa abordagem 
 
 % Colocar Valores obtidos pelo matlab
 
