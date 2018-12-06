@@ -54,7 +54,7 @@ Para gestão do projeto e de suas fases foram utilizadas as plataformas \textit{
 % convert from ft to ss https://www.mathworks.com/help/signal/ref/tf2ss.html
 % convert from ss to ft https://www.mathworks.com/help/matlab/ref/ss2tf.html
 
-Para entender a dinâmica de um sistema uma boa maneira é observando a saída ao aplicar uma entrada. As formas de ondas de entrada para uma melhor compreensão do funcionamento do sistema são ondas triangulares e quadradas. Entradas triangulares dão uma visão das não-linearidades dos sistema, ou seja, a partir de que valor de entrada é possível observar uma saída, isso acontece devido aos atritos dos engrenamentos. E entradas quadradas possibilitam a identificação dos parâmetros da função de transferência, como será demonstrado. Assim, a primeira parte nessa etapa é a identificação de não-linearidades. A entrada e saída da planta real pode ser observada na figura abaixo.
+Para entender a dinâmica de um sistema uma boa maneira é observando a saída ao aplicar uma entrada. As formas de ondas de entrada para uma melhor compreensão do funcionamento do sistema são ondas triangulares e quadradas. Entradas triangulares dão uma visão das não-linearidades dos sistema, ou seja, a partir de que valor de entrada é possível observar uma saída, isso acontece devido aos atritos dos engrenamentos. E entradas quadradas possibilitam a identificação dos parâmetros da função de transferência, como será demonstrado. Assim, a primeira parte nessa etapa é a identificação de não-linearidades para que na etapa seguinte seja possível identificar os parâmetros da função de transferência com maior precisão. A entrada e saída escalonadas da planta real podem ser observadas nas figuras abaixo onde a entrada é tensão e a saída velocidade angular.
 
 \begin{figure}[H]
     \centering
@@ -63,9 +63,12 @@ Para entender a dinâmica de um sistema uma boa maneira é observando a saída a
     \label{fig:entrada_saida_real}
 \end{figure}
 
-
-
-
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{tex/img/Entrada_e_Saida_Linear.jpg}
+    \caption{Entrada e Saída do Sistema Real}
+    \label{fig:entrada_saida_real_linear}
+\end{figure}
 
 \subsection{Região Não-linear}
 Idealmente para qualquer tanto de tensão aplicada, o motor responderia com uma velocidade proporcional. No entanto, como foi possível observar a partir do gráfico na figura \ref{fig:entrada_saida_real}, existe de fato uma não-linearidade na resposta a entrada. Esse efeito é chamado de Zona Morta ou Banda Morta e para o melhor funcionamento da dinâmica do sistema, deve ser evitado ou compensado. Para tanto, foi utilizada a seguinte planta genérica para validar o modelo de identificação da Zona Morta a partir de parâmetros conhecidos.
@@ -96,11 +99,11 @@ Segue o código usado para identificação:
 
 % Maior valor da entrada pelo qual a saída é zero.
 
-Com essa abordagem 
+Com essa abordagem e para a planta genérica foi identificado \textit{delta+} com 0.03\%\ de erro \textit{delta-} com 0.16\%\ de erro. E já para a planta real os valores obtidos são: \textit{delta+} de 0.5635 e \textit{delta-} de -0.5296.
 
 % Colocar Valores obtidos pelo matlab
 
-\subsection{Estimação modelo como primeira ordem}
+\subsection{Estimando o Modelo como Sistema de Primeira Ordem}
 
 Supondo um modelo de primeira ordem com coeficientes $k_1$ e $k_2$ definido por:
 
@@ -110,13 +113,13 @@ Supondo um modelo de primeira ordem com coeficientes $k_1$ e $k_2$ definido por:
 
 % Equação de Transferência
 
-Podemos reescrever a função de transferência como
+Seja a função de transferência. Então, é possível reescrever essa função de transferência como:
 \begin{equation}
 k_1 Ys + k_2 Y  = X
 \end{equation}
 
 % EDO
-A partir do qual temos o sistema descrito a partir da seguinte equação diferencial:
+De onde o sistema é descrito a partir da seguinte equação diferencial:
 
 \begin{equation}
 k_1 \dot{y}(t) + k_2 y(t) = x(t)
@@ -135,7 +138,7 @@ Tomando os valores de entrada e saída do sistema em diferentes instantes para u
 
 % Representação como Matriz
 
-Podemos representar a equação na forma matricial:
+Assim, é possível representar a equação na seguinte forma matricial:
 
 \begin{equation}
 \left[\begin{array}{cc}
@@ -173,7 +176,7 @@ Isolando a matriz $P$ podemos achar o parâmetros a partir da seguinte expressã
     P = \left(A^T(t) A(t)\right)^{-1} A^T(t) B(t)
 \end{equation}
 
-Para implementar em MATLAB podemos aproximar $\dot{y}(t)$ pelo método de diferenças finitas como
+Para implementar em \textit{MATLAB} pode ser feita a aproximação de $\dot{y}(t)$ pelo método de diferenças finitas, como:
 
 \begin{equation}
 \dot{y}(t_i) = \dot{y}[t_i] = \frac{y[t_i] - y[t_{i-1}]}{t_i - t_{i-1}}
@@ -184,7 +187,7 @@ Usando operações de matrizes o código fica bem compacto, como mostrado abaixo
 % Código
 \inputminted[frame=single,framesep=10pt]{matlab}{../src/matlab/firstordertf.m}
 
-\subsection{Modelo Linear 2 ordem}
+\subsection{Estimando o Modelo como Sistema de Segunda Ordem}
 
 Supondo um modelo de primeira ordem com coeficientes $k_1$, $k_2$ e $k_3$ definido por:
 
@@ -263,7 +266,7 @@ Em MATLAB, usando operações de matrizes a implementação fica bem compacta, c
 % Código
 \inputminted[frame=single,framesep=10pt]{matlab}{../src/matlab/secondordertf.m}
 
-\subsection{Validação do Método em Simulação}
+\subsection{Validação do Método de Identificação em Simulação}
 
 Aplicando um sinal de entrada em uma planta simulada de primeira ordem com coeficientes escolhidos de forma aleatória, obtemos a seguinte as seguintes respostas para o modelo aproximado de primeira ordem e de segunda ordem, conforme mostrado na figura \ref{fig:model1Evaluation}.
 
@@ -295,16 +298,15 @@ Em uma planta real pode ser utilizado algum sensor para medir a velocidade e a a
 
 \subsection{Resultados Obtidos Planta Real}
 
-Uma vez validado o método e aplicando para os dados reais foram obtidos os seguintes valores para os coeficientes, conforme mostrado na tabela \ref{tab:tf}
+Uma vez validado o método e aplicando para os dados de entrada e saída reais, foram obtidos os seguintes valores para os coeficientes, conforme mostrado na tabela \ref{tab:tf}.
 
 \begin{table}[H]
     \centering
     \begin{tabular}{r|ccc}
     \hline
-        Modelo & $s^2$ & $s^1$ & $s^0$ \\
+        Modelo & $Ganho$ & $s^1$ & $s^0$ \\
      \hline
-        Primeira Ordem & - & & \\
-        Segunda Ordem & - & & \\
+        Primeira Ordem & 28.223 & 0.100 & 1.000 \\
      \hline
     \end{tabular}
     \caption{Valores dos coeficientes obtidos pela identificação}
@@ -318,43 +320,63 @@ Uma vez validado o método e aplicando para os dados reais foram obtidos os segu
 % Comentar brevemente sobre a estrutura de PID usada
 % Anti Windup
 
-Para projeto de um sistema de controle para a posição foi usado um controlador do tipo PID, no seguinte formato:
+Para projeto de um sistema de controle para a posição angular do sistema rotativo, foi usado um controlador do tipo PID, que na forma paralela tem o seguinte formato:
 
 \begin{equation}
     G_c(s) = K_p + Kd s + \frac{Ki}{s}
 \end{equation}
 
-No entanto esta estrutura traz um problema. Quando o atuador satura a integral continua sendo calculada e acaba gerando um sobresinal fazendo com que o sistema demore mais tempo para entrar em regime permante. Como forma de resolver isto foi implementado a estrutura do PID com Anti Windup, que basicamente bloqueia a integral nos momentos em que esta não é interessante.
+No entanto, o controle PID sozinho não tem um bom desempenho quando o atuador satura. Quando isso acontece o termo integrativo do controle continua atuando e assim gera bastante sobressinal e até saídas cada vez mais crescentes, podendo danificar a planta. Para resolver esse problema foi implementado a estrutura do PID com Anti-windup, que em análise simplificada, bloqueia o termo integrativo nos momentos em que não seja necessário.
 
 %http://www.cds.caltech.edu/~murray/books/AM08/pdf/am06-pid_16Sep06.pdf
 
 \subsection{Estrutura da Planta}
 
-A partir dos dados da identificação, a resposta da planta com o controle PID implementado é simuladas utilizando o Simulink, ilustrada na figura \ref{fig:pidControlPlant}. Na simulação é comparado a resposta ao PID a partir das função de transferência de primeira e de segunda ordem geradas pela etapa de identificação.
+A partir dos dados da identificação, a planta com o controle PID implementado está ilustrada na figura \ref{fig:planta_PID}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1.0\linewidth]{tex/img/dcMotorControl.pdf}
+    \includegraphics[width=1.0\linewidth]{tex/img/Planta_PID.png}
     \caption{Planta Simulação Controle PID}
-    \label{fig:pidControlPlant}
+    \label{fig:planta_PID}
 \end{figure}
+
+A função inversa é dada a partir dos parâmetros \textit{delta+} e \textit{delta-}, e tem a seguinte estrutura:
+
+\begin{equation}
+    y(x) = 
+    \left\{\begin{array}{c}
+    x = x + 0.5635, x > 0 \\
+    x = x - 0.5296, x < 0 \\
+    x, x = 0 \\
+\end{array} \right.
+\end{equation}
 
 \subsection{Ajuste dos Parâmetros}
 
-Existe diversas formas de ajuste dos parâmetros de um controlador PID conforme os critérios de projeto. Para este projeto do menor tempo de subida para a resposta sem sobresinal. Para tal foi utilizado a ferramenta \textit{sisotool} do Matlab para definir os ganhos do controlador através do posicionamento dos polos e zeros em malha fechada. A partir deste procedimento foram definidos os seguintes valores para os ganhos, registrados na tabela \ref{tab:pid_param}
+Existem diversas formas para ajustar os parâmetros de um controlador PID, mas primeiro é necessário definir os critérios de projeto. Neste projeto foi objetivado o equilíbrio entre o tempo de resposta e o \textit{Overshoot}, ou seja, a falta dele. Para tal, foi utilizada a ferramenta \textit{Sisotool} do \textit{MATLAB} para definir os ganhos do controlador. A partir deste procedimento foram definidos os seguintes valores para os ganhos, registrados na tabela \ref{tab:pid_param}
 
 \begin{table}[H]
     \centering
     $$\begin{array}{ccc}
     \hline
-        K_p & K_i & K_d\\
+        K_p & K_i & K_d & Ganho Anti-windup\\
     \hline
-         &  &\\
+        0.11168 & 0.00418 & 0.00268 & \s\\
      \hline
     \end{array}$$
-    \caption{Parâmetros Controlador PID}
+    \caption{Parâmetros do Controlador PID}
     \label{tab:pid_param}
 \end{table}
+
+Na figura abaixo consta a resposta simulada do sistema à uma entrada degrau com e sem a aplicação do controlador.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{tex/img/Resposta_ao_degrau.jpg}
+    \caption{Resposta à uma Entrada Degrau}
+    \label{fig:resposta_ao_degrau}
+\end{figure}
 
 % Foto SISO Tool
 
@@ -378,7 +400,7 @@ Em seguida foram avaliados a resposta do mesmo controlador para outras condiçõ
     \label{fig:quanserpid_s45num1}
 \end{figure}
 
-No entanto, para o experimento com um valor grande de variação com ângulo de $180^\circ$ o controlador manteve um bom desempenho, porém foi notado apenas um erro em regime permanente para a reião com o valor de entrada positivo maior que para a região com entrada negativo, como mostrado na figura \ref{quanserpid_s180num5}.
+No entanto, para o experimento com um valor grande de variação com ângulo de $180^\circ$ o controlador manteve um bom desempenho, porém foi notado apenas um erro em regime permanente para a reião com o valor de entrada positivo maior que para a região com entrada negativo, como mostrado na figura \ref{fig:quanserpid_s180num5}.
 
 \begin{figure}[H]
     \centering
