@@ -5,7 +5,7 @@
 % --------------------------------------------------------------------------------
 \input{relat_layout.tex}
 
-\title{Laboratório X} % Define o título do Relatório
+%\title{Laboratório X} % Define o título do Relatório
 \author{Rafael Lima}
 
 % Definições Auxiliares ( Macros próprias )
@@ -283,6 +283,8 @@ Para projeto de um sistema de controle para a posição foi usado um controlador
 \end{equation}
 
 No entanto esta estrutura traz um problema. Quando o atuador satura a integral continua sendo calculada e acaba gerando um overshot fazendo com que o sistema demore mais tempo para entrar em regime permante. Como forma de resolver isto foi implementado a estrutura do PID com Anti Windup, que basicamente bloqueia a integral nos momentos em que esta não é interessante.
+
+%http://www.cds.caltech.edu/~murray/books/AM08/pdf/am06-pid_16Sep06.pdf
 
 \subsection{Planta Simulação PID}
 
