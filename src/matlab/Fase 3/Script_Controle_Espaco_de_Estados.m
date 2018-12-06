@@ -51,12 +51,12 @@ for i=2:size(t')          % Sinal de entrada (degrau)
    u(1,i)= 1;
 end
 
-%% Resposta do seguidor de referência para condições iniciais dadas sem observador
+%% Resposta do seguidor de referencia para condicoes iniciais dadas sem observador
 
 x0c=[0 0 0]';                           %Condicoes iniciais
 [Y] = lsim(Ac,Bc,Cc,Dc,u,t,x0c); 
 figure; plot(t,Y,'b',t,u,'r');
-title('Saída do Sistema com Seguidor de Referência'); axis([0 max(t) 0 1.2])
+title('Saida do Sistema com Seguidor de Referencia'); axis([0 max(t) 0 1.2])
 
 clear k1 K1 k2 K2 k3 K3 KK PolControle PolDesejado 
 clear PolK Polos x x0 x0c t u X Y I i Aa Ac Ba Bc Cc Dc;
