@@ -1,6 +1,8 @@
 # PID Control 
 
-PID Control deverloped as final project for Dynamic Control Laboratory Class with [Prof. Geovany A. Borges](http://www.ene.unb.br/gaborges/publicacoes/index.htm).
+PID Control with anti-windup deverloped as final project for Dynamic Control Laboratory Class with [Prof. Geovany A. Borges](http://www.ene.unb.br/gaborges/publicacoes/index.htm).
+
+![PID Image](https://raw.githubusercontent.com/akafael/pid-control-dc-motor/master/tex/img/Planta_PID.png)
 
 ## Folders Description
 
